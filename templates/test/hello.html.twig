@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %} 
+ 
+{% block title %}{{ parent() }}Page de bienvenue{% endblock %} 
+ 
+{% block body %} 
+<h3>Bienvenue à {{ prenom }} {{ nom | upper }}</h3> 
+<u>Date d'aujourd'hui : {{ 1680435000 | date('d-m-Y H:i:s')}}</u>
+ 
+{# test de l'age du participant  #} 
+{% if age > 60 %} 
+<h3><br>Vous êtes un senior</h3> 
+{% else %} 
+<h3><br>Vous êtes un junior</h3> 
+{% endif %} 
+
+{{ messageHtml | raw }} {# "raw" permet d'interpréter les balises de messageHtml #}
+{{ dump( monTableau) }} {# affiche les valeurs du tableau "monTableau#}
+
+<button> 
+    <a href="{{ path('app_test') }}" title="vers Test">vers Test</a> 
+</button> 
+
+{% verbatim %} 
+  <div id="app"> 
+       <button @click="compteur++"> 
+           Le compteur est à {{ compteur }} 
+       </button>
+  </div>
+  {% endverbatim %} 
+
+{% endblock %}

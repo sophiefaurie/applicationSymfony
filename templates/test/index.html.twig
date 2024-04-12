@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %} 
+{% block title %} 
+    {{ parent() }} 
+    Page de bienvenue 
+{% endblock %} 
+{% block body %} 
+    <h2>Page de Test</h2> 
+<button> 
+    <a href="{{ path('hello', {'nom':'john','prenom':'doe', 
+'age':25}) }}" 
+        title="vers Test">vers Hello</a> 
+</button> 
+{% endblock %} 
