@@ -36,6 +36,8 @@ class Produit
     #[ORM\ManyToMany(targetEntity:Distributeur::class, cascade:["persist"], inversedBy: 'produits')] 
     private $distributeurs = null; 
 
+    #[ORM\OneToOne(targetEntity:Reference::class,cascade:["persist"], fetch: "EAGER" )]
+
     public function __construct()
     {
         $this->distributeurs = new ArrayCollection();
@@ -128,9 +130,13 @@ class Produit
 
     public function addDistributeur(Distributeur $distributeur): static
     {
-        if (!$this->distributeurs->contains($distributeur)) {
-            $this->distributeurs->add($distributeur);
-        }
+        if (!$this->distributeurs->contains($distributeur)) { 
+ 
+            $this->distributeurs[] = $distributeur; 
+         // prise en compte de la relation inverse :  
+            $distributeur->addProduit($this); 
+      
+     } 
 
         return $this;
     }
