@@ -25,7 +25,7 @@ use Doctrine\ORM\EntityManagerInterface;
 class AdminController extends AbstractController {
 
     // INSERER UN PRODUIT
-    #[Route('/insert', name:'insert')] 
+    #[Route('/insert/{id}', name:'insert')] 
     function insert(Request $request, EntityManagerInterface $entityManager) { 
         
         $produit = new Produit; 
@@ -45,7 +45,7 @@ class AdminController extends AbstractController {
 
             else { 
                 $session = $request->getSession(); 
-                $session->getFlashBag()->add('message', 'Vous devez choisir une image pour le produit'); 
+                $session->getFlashBag()->add('message', 'Veuillez sélectionner une image pour le produit'); 
                 $session->set('statut', 'danger'); 
     
                 return $this->redirect($this->generateUrl('insert')); 
@@ -66,7 +66,7 @@ class AdminController extends AbstractController {
     }
     
     // METTRE A JOUR UN PRODUIT
-    #[Route('/update', name:'update')] 
+    #[Route('/update/{id}', name:'update')] 
     function update(Request $request, $id, EntityManagerInterface $entityManager) { 
     
         $produitRepository=$entityManager->getRepository(Produit::class); 
@@ -120,30 +120,29 @@ class AdminController extends AbstractController {
         return $this->redirect($this->generateUrl('liste')); 
     }
 
-
     #[Route('/testvalid', name:'testvalid')] 
     public function testAction(EntityManagerInterface $entityManager) {
 
-      $produit = new Produit; 
-     
-      $produit->setNom(''); 
-      $produit->setprix(20); 
-      $produit->setQuantite(10); 
-      $produit->setLienImage("monimage.jpg"); 
-      $produit->setRupture(false); 
-     
-      $validator = Validation::createValidator(); 
-      $listErrors = $validator->validate($produit, [ 
-        new Length(['min' => 2]), 
-        new NotBlank(), ]); 
-      
-      if(count($listErrors) > 0) { 
-        return new Response((string) $listErrors); 
-      } 
-      else { 
-        $entityManager ->persist($produit); 
-        $entityManager ->flush(); 
-        return new Response("ok"); 
-      } 
+        $produit = new Produit; 
+        
+        $produit->setNom(''); 
+        $produit->setprix(20); 
+        $produit->setQuantite(10); 
+        $produit->setLienImage("monimage.jpg"); 
+        $produit->setRupture(false); 
+        
+        $validator = Validation::createValidator(); 
+        $listErrors = $validator->validate($produit, [ 
+            new Length(['min' => 2]), 
+            new NotBlank(), ]); 
+        
+        if(count($listErrors) > 0) { 
+            return new Response((string) $listErrors); 
+        } 
+        else { 
+            $entityManager ->persist($produit); 
+            $entityManager ->flush(); 
+            return new Response("ok"); 
+        } 
     } 
 }
