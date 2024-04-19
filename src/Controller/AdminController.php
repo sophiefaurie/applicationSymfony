@@ -18,9 +18,8 @@ use Doctrine\ORM\EntityManagerInterface;
  
 class AdminController extends AbstractController {
 
-    #[Route('/insert', name:'insert')] 
-
     // INSERER UN PRODUIT
+    #[Route('/insert', name:'insert')] 
     function insert(Request $request, EntityManagerInterface $entityManager) { 
         
         $produit = new Produit; 
@@ -60,10 +59,9 @@ class AdminController extends AbstractController {
         return $this->render('Admin/create.html.twig', array('my_form'=>$formProduit->createView())); 
     }
     
-    #[Route('/update', name:'update')] 
-
     // METTRE A JOUR UN PRODUIT
-    function update(Request $request, $id,EntityManagerInterface $entityManager) { 
+    #[Route('/update', name:'update')] 
+    function update(Request $request, $id, EntityManagerInterface $entityManager) { 
     
         $produitRepository=$entityManager->getRepository(Produit::class); 
         $produit=$produitRepository->find($id); 
@@ -101,10 +99,19 @@ class AdminController extends AbstractController {
         return $this->render('Admin/create.html.twig', array('my_form'=>$formProduit->createView())); 
     } 
 
+    // SUPPRIMER UN PRODUIT
     #[Route("/delete/{id}", name:"delete")] 
-    public function delete(Request $request,$id) 
+    function delete(Request $request, $id,EntityManagerInterface $entityManager) 
     { 
- 
+        $produitRepository=$entityManager->getRepository(Produit::class); 
+        $produit=$produitRepository->find($id); 
+        $entityManager->remove($produit); 
+        $entityManager->flush(); 
+        $session=$request->getSession(); 
+        $session->getFlashBag()->add('message','le produit a été supprimé'); 
+        $session->set('statut','success'); 
+
+        return $this->redirect($this->generateUrl('liste')); 
     } 
 
 }
