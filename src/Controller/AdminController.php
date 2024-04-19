@@ -27,7 +27,7 @@ class AdminController extends AbstractController {
         
         $produit = new Produit; 
         $formProduit = $this->createForm(ProduitType::class, $produit); 
-        $formProduit->add('creer', SubmitType::class, array('label' => 'Insertion d\'un produit')); 
+        $formProduit->add('creer', SubmitType::class, array('label' => 'Insertion d\'un produit', 'validation_groups'=>array('registration','all'))); 
         $formProduit->handleRequest($request); 
  
         if ($request->isMethod('post') && $formProduit->isValid()) { 
@@ -70,7 +70,7 @@ class AdminController extends AbstractController {
         $produit=$produitRepository->find($id); 
         $img=$produit->getLienImage(); 
         $formProduit= $this->createForm(ProduitType::class,$produit);
-        $formProduit->add('creer', SubmitType::class,array('label'=>'Mise à jour d\'un produit')); 
+        $formProduit->add('creer', SubmitType::class,array('label'=>'Mise à jour d\'un produit', 'validation_groups'=>array('all'))); 
         $formProduit->handleRequest($request); 
     
         if($request->isMethod('post') && $formProduit->isValid() ) {  
