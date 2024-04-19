@@ -13,12 +13,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Validation; 
 use Symfony\Component\Validator\Constraints\Length; 
 use Symfony\Component\Validator\Constraints\NotBlank; 
+use Symfony\Component\Security\Http\Attribute\IsGranted; 
 
 use App\Entity\Produit; 
 use App\Form\ProduitType; 
 
 use Doctrine\ORM\EntityManagerInterface;
  
+#[Route("/admin")]  
+#[IsGranted('ROLE_ADMIN')] 
 class AdminController extends AbstractController {
 
     // INSERER UN PRODUIT
