@@ -2,14 +2,17 @@
 namespace App\Controller; 
  
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController; 
+use Symfony\Component\HttpFoundation\Request;  
 use Symfony\Component\HttpFoundation\Response; 
 use Symfony\Component\Routing\Annotation\Route; 
-use Symfony\Component\HttpFoundation\Request;  
- 
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;  
 use Symfony\Component\Form\Extension\Core\Type\TextType; 
 use Symfony\Component\Form\Extension\Core\Type\DateType; 
 use Symfony\Component\HttpFoundation\JsonResponse; 
+
+use Symfony\Component\Validator\Validation; 
+use Symfony\Component\Validator\Constraints\Length; 
+use Symfony\Component\Validator\Constraints\NotBlank; 
 
 use App\Entity\Produit; 
 use App\Form\ProduitType; 
@@ -50,7 +53,7 @@ class AdminController extends AbstractController {
             $entityManager->flush(); 
 
             $session=$request->getSession(); 
-            $session->getFlashBag()->add('message','un nouveau produit a été ajouté'); 
+            $session->getFlashBag()->add('message','Un nouveau produit a été ajouté'); 
             $session->set('statut','success'); 
 
             return $this->redirect($this->generateUrl('liste')); 
@@ -67,7 +70,6 @@ class AdminController extends AbstractController {
         $produit=$produitRepository->find($id); 
         $img=$produit->getLienImage(); 
         $formProduit= $this->createForm(ProduitType::class,$produit);
-    
         $formProduit->add('creer', SubmitType::class,array('label'=>'Mise à jour d\'un produit')); 
         $formProduit->handleRequest($request); 
     
@@ -90,7 +92,7 @@ class AdminController extends AbstractController {
             $entityManager->flush(); 
 
             $session=$request->getSession(); 
-            $session->getFlashBag()->add('message', 'Le produit a été mis à jour'); 
+            $session->getFlashBag()->add('message', 'Le produit a bien été mis à jour'); 
             $session->set('statut','success'); 
 
             return $this->redirect($this->generateUrl('liste')); 
@@ -101,17 +103,44 @@ class AdminController extends AbstractController {
 
     // SUPPRIMER UN PRODUIT
     #[Route("/delete/{id}", name:"delete")] 
-    function delete(Request $request, $id,EntityManagerInterface $entityManager) 
-    { 
+    function delete(Request $request, $id, EntityManagerInterface $entityManager) {
+
         $produitRepository=$entityManager->getRepository(Produit::class); 
         $produit=$produitRepository->find($id); 
+
         $entityManager->remove($produit); 
         $entityManager->flush(); 
         $session=$request->getSession(); 
-        $session->getFlashBag()->add('message','le produit a été supprimé'); 
+        $session->getFlashBag()->add('message','Le produit a bien été supprimé'); 
         $session->set('statut','success'); 
 
         return $this->redirect($this->generateUrl('liste')); 
-    } 
+    }
 
+
+    #[Route('/testvalid', name:'testvalid')] 
+    public function testAction(EntityManagerInterface $entityManager) {
+
+      $produit = new Produit; 
+     
+      $produit->setNom(''); 
+      $produit->setprix(20); 
+      $produit->setQuantite(10); 
+      $produit->setLienImage("monimage.jpg"); 
+      $produit->setRupture(false); 
+     
+      $validator = Validation::createValidator(); 
+      $listErrors = $validator->validate($produit, [ 
+        new Length(['min' => 2]), 
+        new NotBlank(), ]); 
+      
+      if(count($listErrors) > 0) { 
+        return new Response((string) $listErrors); 
+      } 
+      else { 
+        $entityManager ->persist($produit); 
+        $entityManager ->flush(); 
+        return new Response("ok"); 
+      } 
+    } 
 }

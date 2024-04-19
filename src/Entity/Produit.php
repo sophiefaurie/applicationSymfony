@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert; 
 use App\Repository\ProduitRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,8 +16,14 @@ class Produit
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 200)]
-    private ?string $nom = null;
+    #[ORM\Column(length: 200)] 
+    #[Assert\Length( 
+        min: 2, 
+        max: 50, 
+        minMessage: 'Le nom du produit doit faire au moins {{ limit }} caractères', 
+        maxMessage: 'Le nom du produit ne doit pas dépasser {{ limit }} caractères', 
+    )] 
+    private ?string $nom = null; 
 
     #[ORM\Column]
     private ?float $prix = null;
