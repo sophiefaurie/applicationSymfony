@@ -7,7 +7,7 @@ use Doctrine\Persistence\ObjectManager;
 use App\Data\ListeProduits; 
 use App\Entity\Produit; 
  
-class ProduitFixtures extends Fixture 
+class BProduitFixtures extends Fixture 
 { 
     public function load(ObjectManager $manager) : void 
     { 

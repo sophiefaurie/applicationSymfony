@@ -8,7 +8,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface; 
 use Doctrine\Persistence\ObjectManager; 
  
-class JoinDistributeurFixtures extends Fixture implements 
+class ZJoinDistributeurFixtures extends Fixture implements 
 FixtureGroupInterface 
 { 
  
@@ -42,7 +42,7 @@ FixtureGroupInterface
             $produit->addDistributeur($logitech); 
  
  
-            $produit = $repProduit->findOneBy(array('nom' => 'écrans')); 
+            $produit = $repProduit->findOneBy(array('nom' => 'ecran')); 
             $produit->addDistributeur($hp); 
             $produit->addDistributeur($dell); 
  
@@ -57,13 +57,11 @@ FixtureGroupInterface
             $produit->addDistributeur($dell); 
             $produit->addDistributeur($acer); 
  
-            $produit = $repProduit->findOneBy(array('nom' => 
-'cartouches encre')); 
+            $produit = $repProduit->findOneBy(array('nom' => 'cartouches')); 
             $produit->addDistributeur($epson); 
  
  
-            $produit=$repProduit->findOneBy(array('nom' => 
-'imprimantes')); 
+            $produit=$repProduit->findOneBy(array('nom' => 'imprimantes')); 
             $produit->addDistributeur($epson);  
             $produit->addDistributeur($hp); 
  
